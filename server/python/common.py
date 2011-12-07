@@ -8,7 +8,7 @@ SIG = 'MERCHANT SIGNATURE'
 VER = '78'
 
 URLBASE = 'https://api-3t.sandbox.paypal.com/nvp'
-URLREDIRECT = 'https://www.sandbox.paypal.com/webscr'
+URLREDIRECT = 'https://www.sandbox.paypal.com/incontext'
 
 def curl(url, postVals):
     data = urllib.urlencode(postVals)
