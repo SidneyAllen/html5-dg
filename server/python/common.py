@@ -5,10 +5,11 @@ import urllib2
 UID = 'MERCHANT ID'
 PASSWORD = 'MERCHANT PASSWORD'
 SIG = 'MERCHANT SIGNATURE'
-VER = '78'
+VER = '84'
 
 URLBASE = 'https://api-3t.sandbox.paypal.com/nvp'
-URLREDIRECT = 'https://www.sandbox.paypal.com/incontext'
+URLREDIRECT = 'https://www.sandbox.paypal.com/webscr'
+URLREDIRECTINCONTEXT = 'https://www.sandbox.paypal.com/incontext'
 
 def curl(url, postVals):
     data = urllib.urlencode(postVals)

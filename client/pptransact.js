@@ -4,13 +4,15 @@ var dg = new PAYPAL.apps.DGFlow({});
 
 var pptransact = function(url) {
 	var languageCenters = {"php": "server/php/pptransact.php",
-	                       "py": "server/python/pptransact.py",
+	                       "py": "http://localhost:8080/server/python/pptransact.py",
 						   "cf": "server/coldfusion/pptransact.cfc",
 						   "java": "server/java/pptransact.jsp"};
 	var url;
+	var mobile;
 	
 	return{
-		init: function(language){
+		init: function(language, mobileFlag){
+			this.mobile = (mobileFlag == true) ? true : false;
 			
 			this.url = (languageCenters[language.toLowerCase()]) ?
 			            languageCenters[language.toLowerCase()]:
@@ -23,21 +25,21 @@ var pptransact = function(url) {
 		
 		bill: function(inputArgs){
 			var userId = encodeURIComponent(inputArgs.userId);
-			
 			pptransact.setUserId(userId);
 			pptransact.setSuccessBillCallBack(inputArgs.successCallback);
 			pptransact.setFailBillCallBack(inputArgs.failCallback);
 			
-			var data = 'method=getToken&itemId=' + encodeURIComponent(inputArgs.itemId) + "&qty=" + encodeURIComponent(inputArgs.itemQty) + "&userId=" + userId;
+			var data = 'method=getToken&itemId=' + encodeURIComponent(inputArgs.itemId) + "&qty=" + encodeURIComponent(inputArgs.itemQty) + "&userId=" + userId + "&mobile=" + this.mobile;
 			pptransact.callServer(data,function(data){
-					
 				if(data.error){
 					alert('error starting bill flow');
 				} else {
+					if(typeof inputArgs.successCallback == 'function'){
+						inputArgs.successCallback.call();
+					}
 					pptransact.startDGFlow(data.redirecturl);
 				}
 			}, inputArgs.failCallback);
-			
 		},
 		setSuccessBillCallBack: function(newSuccessBillCallBack) { this.successBillCallBack = newSuccessBillCallBack; },
 		getSuccessBillCallBack : function() {return this.successBillCallBack; },
@@ -57,6 +59,9 @@ var pptransact = function(url) {
 			
 			pptransact.setUserId(userId);
 			data = localStorage.getItem(userId);
+			
+			if (data == null){ return {'error' : 'no local storage record found'}; } 
+			
 			data = data.replace(/\\/g, "");
 			
 			pptransact.callServer('method=verifyPayment&userId=' + userId + '&transactions=' + encodeURIComponent(data) + '&itemId=' + encodeURIComponent(inputArgs.itemId),function(data){
@@ -88,8 +93,8 @@ var pptransact = function(url) {
 			}, inputArgs.failCallback);
 		},
 		
-		startDGFlow : function(url) {	
-			dg.startFlow(url);
+		startDGFlow : function(url){
+			(this.mobile) ? window.location = url + "&cmd=_express-checkout" : dg.startFlow(url);
 		},
 		
 		releaseDG : function(data) {
@@ -113,10 +118,14 @@ var pptransact = function(url) {
 					
 					localStorage.setItem(pptransact.getUserId(), JSON.stringify(dataArray));
 					
-					pptransact.getSuccessBillCallBack().call();
+					if(typeof pptransact.getSuccessBillCallBack() == 'function'){
+						pptransact.getSuccessBillCallBack().call();
+					}
 				}
-			} else {	
-				pptransact.getFailBillCallBack().call();	
+			} else {
+				if(typeof pptransact.getFailBillCallBack == 'function'){
+					pptransact.getFailBillCallBack().call();
+				}
 			}
 			
 			dg.closeFlow();

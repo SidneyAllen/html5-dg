@@ -14,9 +14,6 @@ import common
 import identity
 import inventory
 
-print 'Content-Type: text/plain'
-print ''
-
 '''
 ' Class Name: pptransact
 ' Description: Main transaction class for payment and verification
@@ -25,6 +22,7 @@ class pptransact:
     uid = None
     password = None 
     signature = None
+    useragent = None
     
     success = None
     userId = None
@@ -39,7 +37,7 @@ class pptransact:
         return json.write(returnObj)
     
     #fetch redirect with token 
-    def getToken(self, userId, itemId, qty):
+    def getToken(self, userId, itemId, qty, isMobile):
         itemObj = inventory.getItem(itemId)
         
         if qty is None:
@@ -76,14 +74,18 @@ class pptransact:
             'PAYMENTREQUEST_0_PAYMENTACTION': 'sale',
             'L_PAYMENTTYPE0': 'sale',
             'PAYMENTREQUEST_0_CUSTOM': '%s,%s' % (userId, itemObj.get('number', 0)),
-            'RETURNURL': '%ssuccess.php?data=%s|%s|%s' % (dirRoot, float(itemObj.get('qty', 0)) * float(itemObj.get('amt', 0)), userId, itemId),
-            'CANCELURL': '%scancel.php' % dirRoot
+            'RETURNURL': '%ssuccess.py?data=%s|%s|%s' % (dirRoot, float(itemObj.get('qty', 0)) * float(itemObj.get('amt', 0)), userId, itemId),
+            'CANCELURL': '%scancel.py' % dirRoot
         }
 		
         response = common.curl(common.URLBASE, postDetails)
         
-        #forward the user to login and accept transaction 
-        redirect = "%s?token=%s" % (common.URLREDIRECT, dict(cgi.parse_qsl(response))['TOKEN'])
+        #forward the user to login and accept transaction
+        redirect = common.URLREDIRECTINCONTEXT
+        if isMobile == 'true':
+            redirect = common.URLREDIRECT
+            
+        redirect = "%s?token=%s" % (redirect, dict(cgi.parse_qsl(response))['TOKEN'])
         
         returnObj = { 'success': 'true',
                       'redirecturl': redirect }
@@ -95,11 +97,11 @@ class pptransact:
         returnObj = {}
         
         if identity.verifyUser(userId):
-            postDetails = { 'USER': UID,
-                             'PWD': PASSWORD,
-                             'SIGNATURE': SIG,
+            postDetails = { 'USER': common.UID,
+                             'PWD': common.PASSWORD,
+                             'SIGNATURE': common.SIG,
                              'METHOD': 'DoExpressCheckoutPayment',
-                             'VERSION': VER,
+                             'VERSION': common.VER,
                              'AMT': amt,
                              'TOKEN': token,
                              'PAYERID': payerId,
@@ -108,7 +110,7 @@ class pptransact:
             response = common.curl(common.URLBASE, postDetails)
             
             #HACK: On sandbox the first request will fail - we need to wait for 2 seconds and then try again
-            if response == false:
+            if response == False:
                 time.sleep(2)
                 response = dict(cgi.parse_qsl(common.curl(common.URLBASE, postDetails)))
             else:
@@ -120,7 +122,7 @@ class pptransact:
             returnObj['itemId'] = itemId
             returnObj['userId'] = userId
             
-            recordPayment(returnObj)
+            identity.recordPayment(returnObj)
         
         return json.write(returnObj)
     
@@ -173,6 +175,9 @@ class pptransact:
 
 transact = pptransact()
 
+def commit(userId, payerId, token, amt, itemId):
+	return transact.commitPayment(userId, payerId, token, amt, itemId)
+
 #parse query string parameters into dictionary
 params = {}
 string_split = [s for s in os.environ['QUERY_STRING'].split('&') if s]
@@ -183,8 +188,12 @@ for item in string_split:
 
 #determine method to run for class
 if 'method' in params:
+    if params['method'] != 'commitPayment':
+        print 'Content-Type: text/plain'
+        print ''
+	
     if params['method'] == 'getToken':
-        transact.getToken(params.get('userId', None), params.get('itemId', None), params.get('qty', None))
+        transact.getToken(params.get('userId', None), params.get('itemId', None), params.get('qty', None), params.get('mobile', None))
     elif params['method'] == 'commitPayment':
         transact.commitPayment(params.get('userId', None), params.get('payerId', None), params.get('token', None), params.get('amt', None), params.get('itemId', None))
     elif params['method'] == 'verifyPayment':
