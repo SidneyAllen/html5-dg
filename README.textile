@@ -15,7 +15,7 @@ The sample code contained in this project is intended to be used to integrate HT
 h2. Installation
 
 This example requires the following features to be available on a hosted web server:
-* [PHP Installtation] - PHP 5.2.x or above.
+* [PHP Installation] - PHP 5.2.x or above.
 * [Java Version] - Install Apache Tomcat. Download JSON-lib-jdk Jar file (json-lib-2.2.2-jdk15.jar). Add the tomcat/lib jars and json jar to the project.
 
 Please follow the proceeding steps for integration:
@@ -44,10 +44,10 @@ array(name =&gt; "PRODUCT NAME",
 Each item to be sold should have its own object. Its initialized in inventory.jsp file. The makeup of an item object is:
 <notextile>
 <pre>
-	HashMap<String, inventoryItem> temp = new HashMap<String, inventoryItem>();
-	temp.put("PRODUCT NUMBER (UNIQUE)", new inventoryItem("PRODUCT NAME", "PRODUCT NUMBER (UNIQUE)", "PRODUCT QUANTITY", "TAX AMOUNT", "PURCHASE AMOUNT",
-			"PRODUCT DESCRIPTION", "PRODUCT CATEGORY"));
-	setInventoryMap(temp);
+HashMap<String, inventoryItem> temp = new HashMap<String, inventoryItem>();
+temp.put("PRODUCT NUMBER (UNIQUE)", new inventoryItem("PRODUCT NAME", "PRODUCT NUMBER (UNIQUE)", "PRODUCT QUANTITY", "TAX AMOUNT", "PURCHASE AMOUNT",
+    "PRODUCT DESCRIPTION", "PRODUCT CATEGORY"));
+setInventoryMap(temp);
 </pre>
 </notextile>	
 
@@ -101,11 +101,11 @@ Include the following script source includes on your page:
 </pre>
 </notextile>
 
-Initialize the pptransact session by adding the following:
+Initialize the pptransact session by adding the language required (first parameter) and whether the toolkit should be target for mobile experiences (second parameter).  If the second parameter is true, the user will be redirected for a mobile checkout experience.  If false or blank, the flow will be displayed in-context for desktop environments. The following are examples of this:
 <notextile>
 <pre>
 //INITIALIZE SESSION WITH APPROPRIATE LANGUAGE (php / cf / java)
-pptransact.init('php'); or
+pptransact.init('py', true); or
 pptransact.init('java'); 
 </pre>
 </notextile>
