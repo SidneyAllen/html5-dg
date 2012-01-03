@@ -4,7 +4,7 @@ var dg = new PAYPAL.apps.DGFlow({});
 
 var pptransact = function(url) {
 	var languageCenters = {"php": "server/php/pptransact.php",
-	                       "py": "http://localhost:8080/server/python/pptransact.py",
+	                       "py": "server/python/pptransact.py",
 						   "cf": "server/coldfusion/pptransact.cfc",
 						   "java": "server/java/pptransact.jsp"};
 	var url;
