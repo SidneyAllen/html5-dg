@@ -26,11 +26,13 @@
 		<cfargument name="userId" type="string" default="0" required="yes">
         <cfargument name="itemId" type="string" required="yes">
         <cfargument name="qty" type="string" required="yes">
+        <cfargument name="mobile" type="string" required="no" default="true">
 	
+    
 		<cfset var result = "">
         
         <cfscript>
-	
+			var isMobile = arguments.mobile;
 			var returnObj = StructNew();
 		
 			var itemObj = StructNew();
@@ -107,7 +109,15 @@
 					/*	cfhttp.FileContent returns token and other response value from the server.
 					We need to pass token as parameter to destination URL which redirect to return URL
 					*/
-					redirecturl = request.URLREDIRECT & token;
+					
+					//forward the user to login and accept transaction
+        			redirect = request.URLREDIRECTINCONTEXT;
+        			if(isMobile eq "true")
+					{
+           				redirect = request.URLREDIRECT;
+					}
+					
+					redirecturl = redirect & "?&token=" & token;
 					
 					returnObj['success'] = true;
 					returnObj['redirecturl'] = redirecturl;	

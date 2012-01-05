@@ -64,7 +64,8 @@ component output="false" {
 	   
        	request.VER = "78";
 		request.URLBASE = "https://api-3t.sandbox.paypal.com/nvp";
-		request.URLREDIRECT = "https://www.sandbox.paypal.com/incontext?token=";
+		request.URLREDIRECTINCONTEXT = "https://www.sandbox.paypal.com/incontext";
+		request.URLREDIRECT = "https://www.sandbox.paypal.com/webscr";
     
 		return true;
 	}
