@@ -11,6 +11,7 @@ class pptransact{
     private $success;
     private $userId;
     private $state;
+	private $URL;
     
     public function __construct(){
         $this->success = true;
@@ -26,7 +27,7 @@ class pptransact{
         return json_encode($returnObj);
     }
     
-    public function getToken($userId, $itemId, $qty){
+    public function getToken($userId, $itemId, $qty ,$mobile){
         $itemObj = getItem($itemId);
         $itemObj['qty'] = $qty;
         $dirRoot = sprintf("http://%s%s/", $_SERVER['SERVER_NAME'], dirname($_SERVER['PHP_SELF']));
@@ -62,10 +63,16 @@ class pptransact{
         $postVals = rtrim(implode($arrPostVals), "&");
         
         $response = parseString(runCurl(URLBASE, $postVals));
-        
+
         //forward the user to login and accept transaction
-        $redirect = sprintf("%s?token=%s", URLREDIRECT, urldecode($response["TOKEN"]));
-        
+		if ($mobile === "true")
+		{
+			$URL = URLREDIRECT;
+		} else {
+			$URL = URLREDIRECTINCONTEXT;
+		}
+        $redirect = sprintf("%s?token=%s", $URL, urldecode($response["TOKEN"]));
+	  
         $returnObj = array(success => true,
                            redirecturl => $redirect);
         
@@ -160,7 +167,7 @@ $transact = new pptransact();
 
 switch($_GET["method"]){
     case "init": $connect->init(); break;
-    case "getToken": $transact->getToken($_GET["userId"], $_GET["itemId"], $_GET["qty"]); break;
+    case "getToken": $transact->getToken($_GET["userId"], $_GET["itemId"], $_GET["qty"], $_GET["mobile"]); break;
     case "commitPayment": $transact->commitPayment($_GET["userId"], $_GET["payerId"], $_GET["token"], $_GET["amt"], $_GET["itemId"]); break;
     case "verifyPayment": $transact->verifyPurchase($_GET["userId"], $_GET["itemId"], $_GET["transactions"]); break;
 }
