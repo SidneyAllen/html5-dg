@@ -101,22 +101,8 @@ var pptransact = function(url) {
 		
 			if(data != undefined) {	
 				if(pptransact.check_for_html5_storage){
-					var dataArray = $.parseJSON(localStorage.getItem(pptransact.getUserId()));
 					
-					if(dataArray === null){
-						var dataArray = new Array();
-						dataArray.push(data);
-					} else {
-						
-						/*for (var i = 0; i < dataArray.length; i++) {
-							console.log(dataArray[i]);
-						}*/
-				
-						
-						dataArray.push(data);
-					}
-					
-					localStorage.setItem(pptransact.getUserId(), JSON.stringify(dataArray));
+					pptransact.saveToLocalStorage(pptransact.getUserId(),data,null);
 					
 					if(typeof pptransact.getSuccessBillCallBack() == 'function'){
 						pptransact.getSuccessBillCallBack().call();
@@ -138,6 +124,27 @@ var pptransact = function(url) {
 		  } catch (e) {
 			return false;
 		  }
+		},
+		
+		
+		
+		saveToLocalStorage : function(userId, data, redirect) {
+			var dataArray = $.parseJSON(localStorage.getItem(userId));
+			
+			if(dataArray === null){
+				var dataArray = new Array();
+				dataArray.push(data);
+			} else {
+				
+				dataArray.push(data);
+			}
+			
+			localStorage.setItem(userId, JSON.stringify(dataArray));
+			
+			if(redirect != null){
+				window.location.href = redirect;
+			}
+			
 		},
 		
 		callServer : function(data, callbackFnk, failCallback){
