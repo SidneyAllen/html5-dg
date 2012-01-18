@@ -1,6 +1,6 @@
 <%@ page language="java"%>
 <%@ page language="java" import="java.util.HashMap"%>
-<%@ include file="/server/java/inventoryItem.jsp"%>
+<%@ include file="inventoryItem.jsp"%>
 
 <%! public void jspInit() {
 		HashMap<String, inventoryItem> temp = new HashMap<String, inventoryItem>();

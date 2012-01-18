@@ -16,22 +16,24 @@
 <%@ page language="java" import="javax.net.ssl.*"%>
 
 <%
-	
-	gv_APIUserName = "YOUR API USERNAME";
-	gv_APIPassword = "PASSWORD";
-	gv_APISignature = "SIGNATURE";
+	// CREATE a developer account at developer.paypal.com to get your API credientials and 
+	// replace the 3 values below.
+	gv_APIUserName = "YOUR USER ID";  // YOUR USER ID
+	gv_APIPassword = "YOURPASSWORD";  // YOUR PASSWORD
+	gv_APISignature = "YOUR SIGNATURE";  //  YOUR SIGNATURE
 
 	//BN Code is only applicable for partners
 	gv_BNCode = "PP-ECWizard";
 	gv_APIEndpoint = "https://api-3t.sandbox.paypal.com/nvp";
-	PAYPAL_URL = "https://www.sandbox.paypal.com/incontext?token=";
+	String URLREDIRECTINCONTEXT = "https://www.sandbox.paypal.com/incontext?token=";
+	String URLREDIRECT="https://www.sandbox.paypal.com/webscr";
 	
 
 	String HTTPREQUEST_PROXYSETTING_SERVER = "";
 	String HTTPREQUEST_PROXYSETTING_PORT = "";
 	boolean USE_PROXY = false;
 
-	gv_Version = "78";
+	gv_Version = "84";
 
 	//WinObjHttp Request proxy settings.
 	gv_ProxyServer = HTTPREQUEST_PROXYSETTING_SERVER;

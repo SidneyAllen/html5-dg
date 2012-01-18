@@ -1,8 +1,8 @@
 <%@ page language="java" import="java.net.URLDecoder.*"%>
 <%@ page language="java" import="net.sf.json.*"%>
 <%@ page language="java" import="java.util.HashMap"%>
-<%@ include file="/server/java/inventory.jsp"%>
-<%@ include file="/server/java/common.jsp"%>
+<%@ include file="inventory.jsp"%>
+<%@ include file="common.jsp"%>
 <%!
 	private String doCommitPayment(HttpServletRequest request,
 			HttpServletResponse response) {
@@ -103,6 +103,7 @@
 			String userId = request.getParameter("userId");
 			String itemId = request.getParameter("itemId");
 			String qty = request.getParameter("qty");
+			String mobile = request.getParameter("mobile");
 
 			inventoryItem item = getInventoryItem(itemId);
 
@@ -167,7 +168,10 @@
 			HashMap decoder = httpcall("SetExpressCheckout", data.toString());
 			String strAck = decoder.get("ACK").toString();
 
-			String paypalURL = "https://www.sandbox.paypal.com/incontext?token=";
+			String paypalURL =  "https://www.sandbox.paypal.com/incontext?token=";
+			if( mobile.equals("true") ) {
+				 paypalURL = "https://www.sandbox.paypal.com/webscr?useraction=commit&token=";
+			}
 
 			JSONObject returnObj = new JSONObject();
 			if (!decoder.get("ACK").equals("Success")) {
