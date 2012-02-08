@@ -62,7 +62,7 @@ component output="false" {
 	   	request.PASSWORD = "#APIPassword#";
 	  	request.SIG = "#APISignature#";
 	   
-       	request.VER = "78";
+       	request.VER = "85";
 		request.URLBASE = "https://api-3t.sandbox.paypal.com/nvp";
 		request.URLREDIRECTINCONTEXT = "https://www.sandbox.paypal.com/incontext";
 		request.URLREDIRECT = "https://www.sandbox.paypal.com/webscr";
