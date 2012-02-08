@@ -27,24 +27,19 @@
 <script>
 
 
-function parentExists()
-{
+function parentExists() {
  	return (parent.location == window.location)? false : true;
 }
 
 function closeFlow(param) {
 	
-	if(param)
-	{
-		window.location.href = '../../index.html';
-	}
-	
 	pptransact.init('cf',true);
 	
-	if(!parentExists())
-	{
+	if(!parentExists()) {
 		var jsonData = $.parseJSON('<cfoutput>#returnObj#</cfoutput>');
 		pptransact.saveToLocalStorage(jsonData.userId,<cfoutput>#returnObj#</cfoutput>,null);
+		
+		setTimeout ( forceCloseFlow, '3000' );
 		
 	} else {
 		parent.pptransact.releaseDG(<cfoutput>#returnObj#</cfoutput>);
@@ -52,13 +47,20 @@ function closeFlow(param) {
   
 }
 
+function forceCloseFlow() {
+
+	//The page you want to redirect the user after successfully storing data in local storage.
+	window.location.href = '../../index.html';
+		
+}
+
 </script>
 </head>
 
 <body onload="closeFlow(false)">
 <div style="background-color:#FFF;height:400px;width:300px; border-radius:8px;padding:20px;">
-    Thank you for the purchase!
-    <button id="close" onclick="closeFlow(true);">close</button>
+    Thank you for the purchase!  You will automatically return to your site in 3 seconds.
+    <button id="close" onclick="forceCloseFlow();">return now</button>
 </div>
 </body>
 </html>
