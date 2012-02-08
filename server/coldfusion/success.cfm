@@ -26,7 +26,6 @@
 
 <script>
 
-
 function parentExists() {
  	return (parent.location == window.location)? false : true;
 }
