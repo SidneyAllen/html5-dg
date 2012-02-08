@@ -71,7 +71,7 @@ class pptransact{
 		} else {
 			$URL = URLREDIRECTINCONTEXT;
 		}
-        $redirect = sprintf("%s?token=%s", $URL, urldecode($response["TOKEN"]));
+        $redirect = sprintf("%s?&useraction=commit&token=%s", $URL, urldecode($response["TOKEN"]));
 	  
         $returnObj = array(success => true,
                            redirecturl => $redirect);
