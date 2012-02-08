@@ -117,7 +117,7 @@
            				redirect = request.URLREDIRECT;
 					}
 					
-					redirecturl = redirect & "?&token=" & token;
+					redirecturl = redirect & "?&useraction=commit&token=" & token;
 					
 					returnObj['success'] = true;
 					returnObj['redirecturl'] = redirecturl;	
