@@ -2,7 +2,7 @@
 define("UID", "joncle_1313106572_biz_api1.yahoo.com");  // YOUR USER ID
 define("PASSWORD", "1313106611");  // YOUR PASSWORD
 define("SIG", "ANaR-mYnO4B1i2mTfRzVmOSN.sl5A14g.6GhzSklnxQeH8jwxB-57XZ2");  //  YOUR SIGNATURE
-define("VER", "84");
+define("VER", "85");
 define("URLBASE", "https://api-3t.sandbox.paypal.com/nvp");
 define("URLREDIRECTINCONTEXT", "https://www.sandbox.paypal.com/incontext");
 define("URLREDIRECT", "https://www.sandbox.paypal.com/webscr");
