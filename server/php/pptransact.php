@@ -119,15 +119,15 @@ class pptransact{
     
     
     public function verifyPurchase($userId = 0, $itemId = 0, $transactions){
-        $arrTransactions = json_decode($transactions);
+       // $arrTransactions = json_decode($transactions);
         $transactionId = null;
         
         $transactions = json_decode(stripslashes($transactions));
         
         for ($i = 0; $i < count($transactions); $i++){
-            $transaction = json_decode($transactions[$i]);
-            if ($transaction->itemId == $itemId){
-                $transactionId = $transaction->transactionId;
+            //$transaction = json_decode($transactions[$i]);
+             if ($transactions[$i]->itemId == $itemId){
+                $transactionId = $transactions[$i]->transactionId;
             }
         }
         
