@@ -29,7 +29,15 @@ function runCurl($url, $postVals = null){
         $options[CURLOPT_POSTFIELDS] = $postVals;
         $options[CURLOPT_CUSTOMREQUEST] = "POST";  
     }
-        
+    
+		
+	$header = array(    		
+    'X-PAYPAL-REQUEST-SOURCE' => 'HTML5 Toolkit' 	
+   	); 	 	
+
+	$options[CURLOPT_HTTPHEADER] = $header;  
+
+	
     curl_setopt_array($ch, $options);
         
     $response = curl_exec($ch);
