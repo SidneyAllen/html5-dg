@@ -73,7 +73,7 @@ var pptransact = function(url) {
 						
 						if(dataArray !== null){
 							for (var i = 0; i < dataArray.length; i++) {
-								if(data.transactionId = dataArray[i].transactionId){
+								if(data.transactionId == dataArray[i].transactionId){
 									dataArray.splice(i,1,data);
 									localStorage.setItem(pptransact.getUserId(), JSON.stringify(dataArray));
 								} 
