@@ -7,7 +7,6 @@ function getSession($itemId,$userId){
 	define("PARTNER_ID", "xxxxx");
 	define("USER_SECRET", "xxxxxxxx");
 	define("ENTRY_ID", $itemId);
-	define("UICONF_ID", "xxxxxx");
 	$user = $userId; 
 
 	//Create a session
@@ -31,7 +30,6 @@ function getPlayList(){
 	// Your Kaltura partner credentials
 	define("PARTNER_ID", "xxxxxxx");
 	define("ADMIN_SECRET", "xxxxxxx");
-	define("USER_SECRET", "xxxxxxxx");
 
 	$user = "SomeoneWeKnow"; 
 	$kconf = new KalturaConfiguration(PARTNER_ID);

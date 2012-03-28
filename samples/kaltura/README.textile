@@ -1,5 +1,57 @@
 h1. Kaltura Open Source Video Player Sample
 
-The sample code contained in this project is intended to be used to integrate HTML5 local storage capabilities into an in-context express checkout experience with the Kaltura open-source video player.  The Kaltura PHP client libraries are included with this project.  You may need to download the latest version from kaltura.com
+The sample code contained in this project is intended to integrate HTML5 local storage capabilities into an in-context express checkout experience with the Kaltura open-source video player.  The Kaltura PHP client libraries are included with this project.  You may need to download the latest version from kaltura.com
 
-You'll need to signup for an account at Kaltura, and place your credentials in the Kaltura.php file.  
+You'll need to signup for an account at Kaltura.com and follow the Setup instructions below.  
+
+h2. Setup Instructions
+
+h3. Step 1 - Get your credentials
+Create an account at Kaltura.com and once you've logged in, click on "Settings".  On the  Integration Settings tab you'll see your *PARTNER ID, ADMINISTRATOR SECRET and USER SECRET*, copy and paste it into the */server/php/kaltura.php*.  You'll need to update both the getSession and getPlaylist methods.
+
+h3. Step 2 - Create an Access Control Profile
+Login to Kaltura.com and click on *Settings*.  On the Access Control tab create a new Access Control profile.  One that will be for secure with a preview.  By secure, I mean they require a Kaltura Session to play.  When creating your profile, scroll to the bottom and under Advanced Security and Pay Per-view check the box for "Secure viewing of this video with server-side secret - (KS)"   and check the box for "preview" and select a length for your preview.
+
+h3. Step 3 - Upload your videos and Create a Playlist
+Login to Kaltura and upload your videos.  For each video you upload, select the Access Control and choose the new profile your created in Step 2.
+
+Next create a playlist.  Click on the *Content* tab and select the *PlayList* menu item.  Create a new Playlist and add your videos to it.  Copy the playlist ID and paste it into the kaltura.php file inside the getPlaylist methods.
+
+<pre>
+$result = $kclient->playlist->get('YOUR_PLAYLIST_ID');
+</pre>
+
+h3. Step 4 - Create two Custom players (one with a Buy Button, and one without)
+Login to Kaltura.com and click on *Studio*.  Click on *New Player Single Video*.  This will be your video player with the "Buy Now" button.  Choose your player's contorls as you like.  Click on the *Custom Button* label and check the box for *Custom Button 1*.  Then, click on options and put a label like "Buy Now".  This will trigger the PayPal embedded payment flow.
+
+Copy the IDs for your two new players.  Remember which one is which.  Open the */index.html* file. 
+
+1. Place the player with the "Buy Now Button" ID as the second argument in the loadVideo method located inside the Verify > FailCallback.
+2. Place the player without the buy now button ID as the second argument in the loadVideo method located inside the Verify > successCallback.
+
+<pre>
+function verify(entryId){
+	
+	pptransact.verify({
+		userId:'888888',
+		itemId:entryId,
+		successCallback: function(){
+			//verify success
+			loadVideo(pptransact.getVerifyData().ks,'PLAYER_ID_NO_BUY_NOW_BUTTON',pptransact.getVerifyData().itemId);
+		},
+		failCallback: function(){
+			//verify cancelled
+			var flashVars = "";
+			loadVideo(flashVars,'PLAYER_ID_WITH_BUY_NOW_BUTTON',entryId);
+			
+		}
+	});
+}
+</pre>
+
+h3. Step 5 - Add Custom Data to your video
+Login to Kaltura.com and click on *Settings*.  Select *Custom Data* and *Add New Schema*.  You'll create two fields, Amt and Taxamt.  Now return to your videos and in edit mode, you'll see *Custom Data* is now availalble.  Enter the amount and tax amount you wish to charge for the video.
+
+h2.  You are ready to monetize your videos.  Please file any issues through github.com  We look forward to hearing from you.
+
+
