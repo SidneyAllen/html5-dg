@@ -10,6 +10,17 @@ h3. Step 1 - Get your credentials
 
 Create an account at Kaltura.com and once you've logged in, click on "Settings".  On the  Integration Settings tab you'll see your *PARTNER ID, ADMINISTRATOR SECRET and USER SECRET*, copy and paste it into the */server/php/kaltura.php*.  You'll need to update both the getSession and getPlaylist methods.
 
+Also, paste the *PARTNER ID* in the index.html inside the loadVideo method.
+
+<pre>
+data = {
+		PARTNER_ID : "YOUR_PARTNER_ID_HERE",
+		UICONF_ID : uiConfId,
+		ENTRY_ID : entryId,
+		FLASH_VARS : flashVars
+};
+</pre>
+
 h3. Step 2 - Create an Access Control Profile
 
 Login to Kaltura.com and click on *Settings*.  On the Access Control tab create a new Access Control profile.  One that will be for secure with a preview.  By secure, I mean they require a Kaltura Session to play.  When creating your profile, scroll to the bottom and under Advanced Security and Pay Per-view check the box for "Secure viewing of this video with server-side secret - (KS)"   and check the box for "preview" and select a length for your preview.
