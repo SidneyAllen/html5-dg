@@ -118,7 +118,7 @@ class pptransact{
     }
     
     
-    public function verifyPurchase($userId = 0, $itemId = 0, $transactions){
+    public function verifyPurchase($userId = 0, $itemId = 0, $transactions = 0){
        // $arrTransactions = json_decode($transactions);
         $transactionId = null;
         
